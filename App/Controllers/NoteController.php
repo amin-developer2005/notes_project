@@ -4,13 +4,16 @@ namespace App\Controllers;
 
 use App\Models\NoteModel;
 use Core\Redirect;
+use Core\Session;
 use Core\Url;
+use Core\ValidationException;
 use JetBrains\PhpStorm\NoReturn;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use App\View\View;
 use Core\Response;
 use App\System\Traits\Validator;
+use App\Forms\NoteForm;
 
 
 
@@ -55,26 +58,18 @@ class NoteController
 
     public function create(): void
     {
-        View::render('notes/create', ['heading' => 'Create New Note']);
+        View::render('notes/create', ['heading' => 'Create New Note', 'errors' => Session::fetchFlash('errors')]);
     }
 
 
-
-
+    /**
+     * @throws ValidationException
+     */
     #[NoReturn] public function store(): void
     {
-        if (! Url::isRequestMethod(Request::METHOD_POST)) {
-            Redirect::to('/notes/create');
-        }
+        NoteForm::validate($this->fields);
 
-        $this->validate();
-
-        if (! $this->isValid) {
-            View::render('notes/create', ['heading' => 'Create Note', 'errors' => $this->messageController->getMessages()]);
-            exit;
-        }
-
-        NoteModel::createNewNote($this->title, $this->body, $_SESSION['user']['id']);
+        NoteModel::createNewNote($this->title, $this->body, Session::fetch('user')['id']);
         Redirect::to('/notes');
     }
 
@@ -89,7 +84,9 @@ class NoteController
     }
 
 
-
+    /**
+     * @throws ValidationException
+     */
     #[NoReturn] public function update(): void
     {
         // Check the request method;
@@ -98,7 +95,7 @@ class NoteController
         }
 
         // Validate the request;
-        $this->validate();
+        NoteForm::validate($this->fields);
 
         // If validation fails, then flash the messages to the user;
         if (! $this->isValid) {
