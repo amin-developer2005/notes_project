@@ -1,0 +1,12 @@
+options -Indexes
+RewriteEngine on
+
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:AUTHORIZATION}]
+
+RewriteBase /notes-project/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+RewriteCond %{REQUEST_URI} !\.*(js|css|less|scss|sass|jpg|jpeg|png|gif)$
+
+RewriteRule ^(.*) Public/maintenance.php [L] $
