@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use View\View;
+use App\View\View;
 
 class HomeController
 {

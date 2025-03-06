@@ -6,7 +6,7 @@ use Core\Middleware\Auth;
 use Core\Middleware\Guest;
 use Core\Middleware\Middleware;
 use JetBrains\PhpStorm\NoReturn;
-use View\View;
+use App\View\View;
 
 class Router
 {

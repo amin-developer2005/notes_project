@@ -3,7 +3,6 @@ use Core\Url;
 $submitClasses = "shadow-sm w-full my-7 bg-blue-700 text-white font-semibold border-transparent hover:bg-blue-500 focus:bg-green-800 dark:focus:bg-blue-900 rounded-md border border-transparent px-6 py-3 transition-colors ease-in-out tracking-widest duration-200 cursor-pointer tracking-widest focus:ring-3 focus:ring-indigo-500 focus:ring-offset-2";
 $inputClasses = "rounded-md border border-2 border-gray-300 hover:border-indigo-500 focus:border-indigo-500 focus:ring-indigo-500 w-full transition-colors duration-400 ease-in-out sm:text-l px-4 py-3";
 
-
 ?>
 
 
@@ -32,9 +31,9 @@ $inputClasses = "rounded-md border border-2 border-gray-300 hover:border-indigo-
                                            placeholder="Enter title"
                                            value="<?= Url::hasPost('title') ? Url::fetchPost('title') : '' ?>"
                                            required>
-                                    <?php if (isset($errors['title'])) { ?>
+                                    <?php if (isset($errors[0]['title'])) { ?>
                                         <div class="sm:py-4">
-                                            <p class="text-red-500 text-s font-bold"><?= $errors['title'] ?></p>
+                                            <p class="text-red-500 text-s font-bold"><?= $errors[0]['title'] ?></p>
                                         </div>
                                     <?php } ?>
                                 </div>
@@ -54,8 +53,8 @@ $inputClasses = "rounded-md border border-2 border-gray-300 hover:border-indigo-
                                             placeholder="Enter the note body here"
                                     required><?= Url::hasPost('body') ? Url::fetchPost('body') : '' ?></textarea>
 
-                                    <?php if (isset($errors['body'])) { ?>
-                                        <p class="text-red-500 text-s"><?= $errors['body'] ?></p>
+                                    <?php if (isset($errors[1]['body'])) { ?>
+                                        <p class="text-red-500 text-s font-bold"><?= $errors[1]['body'] ?></p>
                                     <?php } ?>
                                 </div>
                             </div>

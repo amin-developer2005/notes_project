@@ -8,7 +8,7 @@ use Core\Url;
 use JetBrains\PhpStorm\NoReturn;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
-use View\View;
+use App\View\View;
 use Core\Response;
 use App\System\Traits\Validator;
 

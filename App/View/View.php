@@ -1,6 +1,6 @@
 <?php
 
-namespace View;
+namespace App\View;
 
 class View
 {

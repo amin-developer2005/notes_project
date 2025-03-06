@@ -5,7 +5,7 @@ namespace Core;
 use Core\Url;
 use Core\Redirect;
 use Symfony\Component\HttpFoundation\Request;
-use View\View;
+use App\View\View;
 use App\Models\UserModel;
 use App\Forms\LoginForm;
 

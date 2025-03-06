@@ -6,7 +6,7 @@ use App\Models\UserModel;
 use Symfony\Component\HttpFoundation\Request;
 use Core\Url;
 use App\System\Traits\AuthValidator;
-use View\View;
+use App\View\View;
 use Core\Redirect;
 
 

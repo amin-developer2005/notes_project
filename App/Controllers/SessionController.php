@@ -7,7 +7,7 @@ use Core\Redirect;
 use Core\ValidationException;
 use Symfony\Component\HttpFoundation\Request;
 use Core\Authenticator;
-use View\View;
+use App\View\View;
 use App\Forms\LoginForm;
 use Core\Session;
 

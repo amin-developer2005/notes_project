@@ -4,7 +4,7 @@ use Core\Response;
 use Core\Session;
 use Core\Url;
 use JetBrains\PhpStorm\NoReturn;
-use View\View;
+use App\View\View;
 
 
 #[NoReturn] function dd($data)

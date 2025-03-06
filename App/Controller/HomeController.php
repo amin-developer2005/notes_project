@@ -3,7 +3,7 @@
 namespace Controller;
 
 use Core\Redirect;
-use View\View;
+use App\View\View;
 
 class HomeController
 {
