@@ -19,17 +19,17 @@ class Router
     public function route($uri, $method): void
     {
         foreach ($this->routes as $route) {
-            if ($route['uri'] === $uri && $route['method'] === strtoupper($method)) {
-                $controller = $route['controller'][0];
-                $method = $route['controller'][1];
-                $controllerInstance = new $controller();
+            if ($route['uri'] === $uri && $route['method'] === $method) {
 
                 if (null !== $middleware = $route['middleware']) {
                     Middleware::resolve($middleware);
                 }
 
-                call_user_func_array([$controllerInstance, $method], []);
+                $controller = $route['controller'][0];
+                $method = $route['controller'][1];
+                $controllerInstance = new $controller();
 
+                call_user_func_array([$controllerInstance, $method], []);
             }
         }
 
@@ -125,7 +125,7 @@ class Router
 
     public function goBack()
     {
-        Redirect::to(Url::fetchRequestMethod(), true);
+        Redirect::to($_SERVER['HTTP_REFERER'], true, false);
     }
 
 

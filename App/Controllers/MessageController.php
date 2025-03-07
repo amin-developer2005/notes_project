@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 class MessageController
 {
-    private array $messages;
+    private array $messages = [];
 
 
     public function set($message, $field = ''): void

@@ -3,7 +3,6 @@
 namespace Core;
 
 
-use mysql_xdevapi\Exception;
 
 class Session
 {
@@ -135,7 +134,9 @@ class Session
         }
 
         if (static::hasFlash($field)) {
-            return $_SESSION['__flash'][$field];
+            $val = $_SESSION['__flash'][$field];
+            static::unFlash();
+            return $val;
         }
 
         return $default;

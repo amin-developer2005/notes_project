@@ -9,8 +9,6 @@ use Core\Middleware\Guest;
 class Middleware
 {
 
-
-
     protected static array $middlewares = [
         'auth' => Auth::class,
         'guest' => Guest::class,

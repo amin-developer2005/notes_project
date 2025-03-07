@@ -18,7 +18,7 @@ use JetBrains\PhpStorm\NoReturn;
 class Redirect
 {
 
-    public static function to(string $url, bool $isFullUrl = false): void
+    public static function to(string $url, bool $isFullUrl = false, $exit = true): void
     {
         if ($isFullUrl) {
             header('Location: ' . $url);
@@ -26,7 +26,9 @@ class Redirect
             header('Location: ' . Url::load($url));
         }
 
-        exit;
+        if ($exit) {
+            exit;
+        }
     }
 
 

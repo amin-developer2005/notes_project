@@ -98,7 +98,3 @@ if (isset($errors)) {
             </form>
         </div>
     </div>
-
-<?php
-Session::unFlash();
-?>

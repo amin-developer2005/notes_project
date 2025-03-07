@@ -15,8 +15,9 @@ trait AuthValidator
     }
 
 
-
-
+    /**
+     * @throws ValidationException
+     */
     public function validate(): void
     {
         $this->messageController = new MessageController();
@@ -27,7 +28,6 @@ trait AuthValidator
         $this->validateEmail($this->email);
         $this->validateMobile($this->mobile);
         $this->validatePassword($this->password, $this->confirmPassword);
-
 
         if ($this->failed()) {
             $this->throwException();
@@ -46,6 +46,7 @@ trait AuthValidator
     }
 
 
+
     /**
      * @throws ValidationException
      */
@@ -53,8 +54,6 @@ trait AuthValidator
     {
         ValidationException::throw($this->messageController->getMessages(), $this->fields);
     }
-
-
 
 
 
@@ -86,15 +85,12 @@ trait AuthValidator
 
 
 
-
-
     public function validateEmail(string $email): void
     {
         if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->messageController->set( "$this->email + $this->password");
         }
     }
-
 
 
 
@@ -106,7 +102,6 @@ trait AuthValidator
             $this->messageController->set( "Your mobile number must be between 10 to 15 digits long and in a valid format.");
         }
     }
-
 
 
 

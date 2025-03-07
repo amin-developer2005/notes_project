@@ -56,15 +56,6 @@ class RegisterController
         ]);
 
         Redirect::to('/home');
-
-
-//        Session::flash('errors', $this->messageController->getMessages());
-//
-//        foreach ($this->fields as $field => $value) {
-//            Session::flash($field, $value);
-//        }
-//
-//        Redirect::to('/account/register');
     }
 
 

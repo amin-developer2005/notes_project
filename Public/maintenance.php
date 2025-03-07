@@ -18,12 +18,11 @@ $router = App::resolve(Router::class);
 include base_path("/App/System/routes.php");
 
 
-
 try {
-    $router->route($uri, $_POST['_method'] ?? $_SERVER['REQUEST_METHOD']);
+    $router->route($uri, $_POST['_method'] ?? Url::fetchRequestMethod());
 } catch (ValidationException $exception) {
-    Session::flash('errors', $exception->loginForm->errors());
-    Session::flash('old', $exception->loginForm->old());
+    Session::flash('errors', $exception->errors);
+    Session::flash('old', $exception->old);
 
     $router->goBack();
 }

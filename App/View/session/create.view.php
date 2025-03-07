@@ -68,6 +68,3 @@ use Core\Url;
         </div>
     </div>
 
-<?php
-    Session::unFlash();
-?>

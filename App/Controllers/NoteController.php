@@ -38,7 +38,7 @@ class NoteController
 
     public function index(): void
     {
-        $notes = NoteModel::fetchUserNotesByUserId($_SESSION['user']['id']);
+        $notes = NoteModel::fetchUserNotesByUserId(Session::fetch('user')['id']);
         View::render("notes/index", ["notes" => $notes, 'heading' => 'Notes']);
     }
 
@@ -60,6 +60,7 @@ class NoteController
     {
         View::render('notes/create', ['heading' => 'Create New Note', 'errors' => Session::fetchFlash('errors')]);
     }
+
 
 
     /**
@@ -84,32 +85,19 @@ class NoteController
     }
 
 
+
     /**
      * @throws ValidationException
      */
     #[NoReturn] public function update(): void
     {
-        // Check the request method;
-        if (! Url::isRequestMethod(Request::METHOD_POST)) {
-            Redirect::to('/notes/edit?id=' . $_POST['id']);
-        }
-
-        // Validate the request;
         NoteForm::validate($this->fields);
 
-        // If validation fails, then flash the messages to the user;
-        if (! $this->isValid) {
-            View::render("notes/edit?id={$_POST['id']}", ['heading' => 'Edit Your Note', 'errors' => $this->messageController->getMessages()]);
-        }
+        $note = NoteModel::fetchNoteById(Url::fetchPost('id'));
+        authorize($note->user_id === Session::fetch('user')['id']);
 
-        // Authorize the user; Check if the user who created this specific note is the person who is currently signed in;
-        $note = NoteModel::fetchNoteById($_POST['id']);
-        authorize($note->user_id === $_SESSION['user']['id']);
-
-        // If Authorization is passed successfully, then update the specific note in the database;
         NoteModel::updateNoteByIdAndUserId($note->id, $note->user_id, $this->title, $this->body);
 
-        // Redirect the user to the index page of notes;
         Redirect::to('/notes');
     }
 
@@ -117,16 +105,10 @@ class NoteController
 
     #[NoReturn] public function delete(): void
     {
-        if (! Url::isRequestMethod(Request::METHOD_POST)) {
-            Redirect::to('/home');
-        }
+        $note = NoteModel::fetchNoteById(Url::fetchPost('id'));
+        authorize($note->user_id === Session::fetch('user')['id']);
 
-        $currentUser = $_SESSION['user']['id'];
-
-        $note = NoteModel::fetchNoteById($_POST['id']);
-        authorize($note->user_id === $currentUser);
-
-        NoteModel::deleteNoteByIdAndUserId($_POST['id'], $currentUser);
+        NoteModel::deleteNoteByIdAndUserId(Url::fetchPost('id'), $note->user_id);
         Redirect::to('/notes');
     }
 
