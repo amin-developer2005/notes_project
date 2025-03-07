@@ -12,6 +12,9 @@ class Router
 {
     private array $routes = [];
 
+    public function __construct(?Container $container, $routes = [])
+    {
+    }
 
     /**
      * @throws \Exception
@@ -22,7 +25,7 @@ class Router
             if ($route['uri'] === $uri && $route['method'] === $method) {
 
                 if (null !== $middleware = $route['middleware']) {
-                    Middleware::resolve($middleware);
+                    Middleware::resolver($middleware);
                 }
 
                 $controller = $route['controller'][0];

@@ -2,7 +2,6 @@
 session_start();
 
 include BASE_PATH . "App/System/common.php";
-//include base_path("/Core/Autoloader.php");
 include base_path('/vendor/autoload.php');
 
 include BASE_PATH . "App/System/bootstrap.php";

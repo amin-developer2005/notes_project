@@ -18,18 +18,18 @@ $router->get('/', [HomeController::class, 'index']);
 $router->get('/about', [HomeController::class, 'about']);
 $router->get('/contact', [HomeController::class, 'contact']);
 
-$router->get('/account/register', [RegisterController::class, 'create'])->only('guest');
-$router->post('/account/register', [RegisterController::class, 'store'])->only('guest');
+$router->get('/account/register', [RegisterController::class, 'create'])->only(Guest::class);
+$router->post('/account/register', [RegisterController::class, 'store'])->only(Auth::class);
 
-$router->get('/account/login', [SessionController::class, 'create'])->only('guest');
-$router->post('/session/store', [SessionController::class, 'store'])->only('guest');
-$router->delete('/session/destroy', [SessionController::class, 'destroy'])->only('auth');
+$router->get('/account/login', [SessionController::class, 'create'])->only(Guest::class);
+$router->post('/session/store', [SessionController::class, 'store'])->only(Guest::class);
+$router->delete('/session/destroy', [SessionController::class, 'destroy'])->only(Auth::class);
 
-$router->get('/notes', [NoteController::class, 'index'])->only('auth');
-$router->get('/notes/create', [NoteController::class, 'create'])->only('auth');
-$router->post('/notes/store', [NoteController::class, 'store'])->only('auth');
+$router->get('/notes', [NoteController::class, 'index'])->only(Auth::class);
+$router->get('/notes/create', [NoteController::class, 'create'])->only(Auth::class);
+$router->post('/notes/store', [NoteController::class, 'store'])->only(Auth::class);
 
-$router->get('/note/show', [NoteController::class, 'show'])->only('auth');
-$router->get('/note/edit', [NoteController::class, 'edit'])->only('auth');
-$router->patch('/note/update', [NoteController::class, 'update'])->only('auth');
-$router->delete('/note/delete', [NoteController::class, 'delete'])->only('auth');
+$router->get('/note/show', [NoteController::class, 'show'])->only(Auth::class);
+$router->get('/note/edit', [NoteController::class, 'edit'])->only(Auth::class);
+$router->patch('/note/update', [NoteController::class, 'update'])->only(Auth::class);
+$router->delete('/note/delete', [NoteController::class, 'delete'])->only(Auth::class);

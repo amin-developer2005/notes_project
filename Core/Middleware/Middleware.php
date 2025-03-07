@@ -2,6 +2,7 @@
 
 namespace Core\Middleware;
 
+use App\Controllers\App;
 use Core\Middleware\Auth;
 use Core\Middleware\Guest;
 
@@ -10,25 +11,25 @@ class Middleware
 {
 
     protected static array $middlewares = [
-        'auth' => Auth::class,
-        'guest' => Guest::class,
+        Auth::class,
+        Guest::class,
     ];
 
 
-
-
-    public static function resolve($field): void
+    /**
+     * @throws \Exception
+     */
+    public static function resolver($middleware)
     {
-        if (! $field) {
+        if (! $middleware) {
             return;
         }
 
-        if (! $middleware = static::$middlewares[$field] ?? null) {
-            throw new \Exception("The middleware '$field' does not exist.");
+        if (! in_array($middleware, self::$middlewares, true)) {
+            throw new \Exception("Middleware class {{$middleware}} not exist.");
         }
 
-        (new $middleware)->handle();
+        App::resolve($middleware)->handle();
     }
-
 
 }
