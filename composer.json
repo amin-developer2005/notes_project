@@ -1,12 +1,13 @@
 {
     "name": "mohammadamin/notes-project",
-    "description": "A powerfull PHP-based notes management application that allows users to create, edit, and delete personal notes.",
+    "description": "A robust, object-oriented and web-based notes management application built with PHP 8.4 that allows users to create, edit, and delete personal notes.",
     "type": "project",
     "require": {
         "symfony/http-foundation": "^7.2",
         "symfony/dependency-injection": "^7.2",
         "vlucas/phpdotenv": "v5.6.1",
-      "ext-pdo": "*"
+      "ext-pdo": "*",
+      "ext-http": "*"
     },
     "license": "MIT",
     "autoload": {

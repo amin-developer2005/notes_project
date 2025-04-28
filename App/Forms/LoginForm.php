@@ -1,4 +1,14 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: mohammadAmin
+ * Date: 3/2/2025
+ * @author: Mohammadamin Meghdadi
+ * @email: mohamadamin.meghdadi@gmail.com
+ * @website: https://amin-developer.ir
+ * @link: https://github.com/amin-developer2005
+ */
+
 
 namespace App\Forms;
 
@@ -13,10 +23,21 @@ class LoginForm
 {
     use Validator;
 
+    public array $data {
+        set => $this->data = $value;
+        get => $this->data;
+    }
+
+    public array $errors {
+        get {
+           return $this->messageController->getMessages();
+        }
+    }
 
 
-    public function __construct(public array $data)
+    public function __construct(array $data)
     {
+        $this->data = $data;
         $this->messageController = new MessageController();
 
         $this->validateNotVacant($this->data);
@@ -32,13 +53,13 @@ class LoginForm
      */
     public static function validate(array $data): static
     {
-        $instance = new static($data);
+        $login = new static($data);
 
-        if ($instance->failed()) {
-            $instance->throwException();
+        if ($login->failed()) {
+            $login->throwException();
         }
 
-        return $instance;
+        return $login;
     }
 
 

@@ -1,4 +1,13 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: mohammadAmin
+ * Date: 3/1/2025
+ * @author: Mohammadamin Meghdadi
+ * @email: mohamadamin.meghdadi@gmail.com
+ * @website: https://amin-developer.ir
+ * @link: https://github.com/amin-developer2005
+ */
 
 namespace Core\Middleware;
 

@@ -1,4 +1,14 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: mohammadAmin
+ * Date: 2/10/2025
+ * @author: Mohammadamin Meghdadi
+ * @email: mohamadamin.meghdadi@gmail.com
+ * @website: https://amin-developer.ir
+ * @link: https://github.com/amin-developer2005
+ */
+
 
 namespace Core\Database;
 
@@ -23,18 +33,19 @@ class DbMysqli extends DatabaseFactory
         // TODO: Implement fetch() method.
     }
 
-    public function fetchOrFail()
+
+    public function find()
     {
-        // TODO: Implement fetchOrFail() method.
+        // TODO: Implement find() method.
     }
 
-    public function fetchAll()
+    public function findOrFail()
     {
-        // TODO: Implement fetchAll() method.
+        // TODO: Implement findOrFail() method.
     }
 
-    public function fetchAllOrFail()
+    public function findAll()
     {
-        // TODO: Implement fetchAllOrFail() method.
+        // TODO: Implement findAll() method.
     }
 }
