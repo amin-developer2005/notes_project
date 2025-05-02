@@ -16,62 +16,82 @@ namespace Core\Database;
 use Core\Database\DatabaseInterface;
 use Core\Database\DbPDO;
 use Core\Database\DbMysqli;
+use Exception;
 use PDO;
 use stdClass;
 
 
 abstract class DatabaseFactory implements DatabaseInterface
 {
-    private static ?object $instance = null;
+
+    /**
+     * Singleton instance.
+     */
+    private static ?object $instance;
 
 
     /**
      * Supported database classes
      */
-    private const array DATABASES = [
-        'pdo' => DbPDO::class,
-        'mysqli' => DbMysqli::class,
-        'pgsql' => DbPgsql::class,
-        'sqlite' => DbSqlite::class,
+    private const array DATABASE_DRIVERS = [
+        'pdo_mysql'     => DbPDO::class,
+        'mysqli'        => DbMysqli::class,
+        'pdo_pgsql'     => DbPgsql::class,
+        'pdo_sqlite'    => DbSqlite::class,
     ];
 
 
-    protected PDO $connection {
+    /**
+     * @var object Database connection instance
+     */
+    protected object $connection {
         set => $this->connection = $value;
         get => $this->connection;
     }
 
+
+    /**
+     * @var mixed Statement instance
+     */
     protected $stmt = null {
         set => $this->stmt = $value;
         get => $this->stmt;
     }
 
 
+
     /**
-     * @throws \Exception
+     * The Constructor initializes connection parameters and invoke the connect() method to automatically connect to the database.
+     *
+     * @throws Exception
      */
-    public function __construct(protected(set) readonly string $host, protected(set) readonly string $port, protected(set) readonly string $dbname, protected(set) readonly string $charset, protected(set) readonly string $username, protected(set) readonly string $password) {
+    public function __construct(protected(set) readonly string $host, protected(set) readonly int $port, protected(set) readonly string $dbname, protected(set) readonly string $charset, protected(set) readonly string $username, protected(set) readonly string $password) {
         $this->connect();
     }
 
+    abstract public function connect();
+    abstract public function close();
+
+
 
     /**
-     * @throws \Exception
+     * Returns a singleton instance of the database connection.
+     *
+     * @param string $driver
+     * @return ?object
+     * @throws Exception
      */
-    public static function fetchInstance($db = ''): ?object
+    public static function fetchInstance(string $driver = ''): ?object
     {
         // TODO: Implement __invoke() method.
-
         if (isset(self::$instance)) {
             return self::$instance;
         }
 
-        if (empty($db)) {
-            $db = self::fetchClass();
-        }
+        $class = ! empty($driver) ? self::DATABASE_DRIVERS[$driver] ?? null : self::autoResolveDriverClass();
 
-        if (null === $class = self::DATABASES[$db] ?? null) {
-            throw new \Exception("Database [$db] is not defined.");
+        if (null === $class) {
+            throw new Exception("Database [$driver] is not defined or no database class found.");
         }
 
 
@@ -88,28 +108,28 @@ abstract class DatabaseFactory implements DatabaseInterface
     }
 
 
+
+
     /**
-     * @throws \Exception
+     * Detects the appropriate database class based on loaded PHP extensions.
+     *
+     * @return ?string
      */
-    private static function fetchClass(): string
+    private static function autoResolveDriverClass(): ?string
     {
         $extensions = get_loaded_extensions();
-        foreach ($extensions as $extension) {
-            $className = match ($extension) {
-                'PDO', 'pdo_mysql' => 'pdo',
-                'mysqli' => 'mysqli',
-                'pdo_pgsql' => 'pgsql',
-                'pdo_sqlite' => 'sqlite',
-                'mongo' => 'mongo',
-                default => null,
-            };
 
-            if (null !== $className) {
-                return $className;
+        foreach (self::DATABASE_DRIVERS as $driver => $dbClass) {
+
+            if (in_array($driver, $extensions)) {
+                if (class_exists($dbClass)) {
+                    return $dbClass;
+                }
             }
+
         }
 
-        throw new \Exception("No database class found!");
+        return null;
     }
 
 }
