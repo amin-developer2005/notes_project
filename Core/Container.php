@@ -36,6 +36,7 @@ class Container implements ContainerInterface
     public function resolve($field): object
     {
         // TODO: Implement resolve() method.
+
         if (array_key_exists($field, $this->bindings)) {
             $resolver = $this->bindings[$field];
 
@@ -51,7 +52,7 @@ class Container implements ContainerInterface
     /**
      * @throws \ReflectionException
      */
-    private function autoResolve($class)
+    public function autoResolve($class)
     {
         $reflection = new ReflectionClass($class);
 

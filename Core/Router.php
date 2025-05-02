@@ -12,6 +12,7 @@
 
 namespace Core;
 
+use App\Controllers\App;
 use Core\Middleware\Auth;
 use Core\Middleware\Guest;
 use Core\Middleware\Middleware;
@@ -22,9 +23,26 @@ class Router
 {
     private array $routes = [];
 
-    public function __construct(?Container $container, $routes = [])
-    {
+    private Container $container {
+        set => $this->container = $value;
+        get => $this->container;
     }
+
+
+    private Middleware $middleware {
+        set => $this->middleware = $value;
+        get => $this->middleware;
+    }
+
+
+
+    public function __construct(Container $container, Middleware $middleware)
+    {
+        $this->container = $container;
+        $this->middleware = $middleware;
+    }
+
+
 
     /**
      * @throws \Exception
@@ -38,9 +56,8 @@ class Router
                     Middleware::resolver($middleware);
                 }
 
-                $controller = $route['controller'][0];
-                $method = $route['controller'][1];
-                $controllerInstance = new $controller();
+                [$controller, $method] = $route['controller'];
+                $controllerInstance = $this->container->autoResolve($controller);
 
                 call_user_func_array([$controllerInstance, $method], []);
             }

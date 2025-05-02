@@ -12,8 +12,7 @@
 
 namespace App\Controllers;
 
-use App\Models\UserModel;
-use Core\Authenticator;
+use App\Services\AuthenticationService;
 use Core\Session;
 use Core\ValidationException;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,17 +22,29 @@ use App\View\View;
 use Core\Redirect;
 
 
+
+
 #[\AllowDynamicProperties]
 class RegisterController
 {
     use AuthValidator;
 
+    private AuthenticationService $authenticationService {
+        set => $this->authenticationService = $value;
+        get => $this->authenticationService;
+    }
+
+
     private array $fields = [];
 
 
 
-    public function __construct()
+
+
+    public function __construct(AuthenticationService $authenticationService)
     {
+        $this->authenticationService = $authenticationService;
+
         if (Url::isRequestMethod(Request::METHOD_POST)) {
             if (Url::hasPost('email')) {
                 $this->setFields(Url::fetchPost());
@@ -55,36 +66,18 @@ class RegisterController
     {
         $this->validate();
 
-        if (! $this->register()) {
+        if (! $this->authenticationService->register($info = [
+            'username'   => $this->username,
+            'email'      => $this->email,
+            'mobile'     => $this->mobile,
+        ])) {
             $this->error('email', 'You already have an account in our website.')->throwException();
         }
 
-        new Authenticator()->login([
-            'username' => $this->username,
-            'email' => $this->email,
-            'mobile' => $this->mobile,
-        ]);
+        $this->authenticationService->login($info);
 
         Redirect::to('/home');
     }
-
-
-
-
-
-    private function register(): bool
-    {
-        $user = UserModel::fetchUserByEmail($this->email);
-
-        if (! $user) {
-            $hashedPassword = generateHashArgon($this->password);
-            UserModel::create($this->username, $this->email, $hashedPassword);
-            return true;
-        }
-
-        return false;
-    }
-
 
 
 

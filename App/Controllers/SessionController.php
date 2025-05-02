@@ -15,8 +15,7 @@ namespace App\Controllers;
 use Core\Url;
 use Core\Redirect;
 use Core\ValidationException;
-use Symfony\Component\HttpFoundation\Request;
-use Core\Authenticator;
+use App\Services\AuthenticationService;
 use App\View\View;
 use App\Forms\LoginForm;
 use Core\Session;
@@ -25,10 +24,21 @@ use Core\Session;
 
 class SessionController
 {
+    private AuthenticationService $authenticationService {
+        set => $this->authenticationService = $value;
+        get => $this->authenticationService;
+    }
+
+
+    public function __construct(AuthenticationService $authenticationService)
+    {
+        $this->authenticationService = $authenticationService;
+    }
+
 
     public function create(): void
     {
-        View::render('session/create', ['heading' => 'Log In to your account', 'errors' => Session::fetchFlash('errors') ?? []]);
+        View::render('session/create', ['heading' => 'Log In to your account', 'errors' => []]);
     }
 
 
@@ -43,7 +53,7 @@ class SessionController
             ]
         );
 
-        if (! (new Authenticator()->attempt($data['email'], $data['password']))) {
+        if (! ($this->authenticationService->attempt($data['email'], $data['password']))) {
             $loginForm->error('email', "No matching account found for this email and password.")->throwException();
         }
 
@@ -54,7 +64,7 @@ class SessionController
 
     public function destroy(): void
     {
-        new Authenticator()->logout();
+        $this->authenticationService->logout();
         Redirect::toLogin();
     }
 

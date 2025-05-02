@@ -40,7 +40,7 @@ use Core\Url;
                                required
                                class="relative block w-full appearance-none rounded-none rounded-t-md border border-white-300 px-3 py-2 text-white-900 placeholder-white-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                                placeholder="Email address"
-                               value="<?= old('email') ?? '' ?>">
+                               value="<?= old('old')['email'] ?>">
                     </div>
 
                     <div>

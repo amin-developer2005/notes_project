@@ -106,5 +106,6 @@ function isUser(): bool
 
 function old($field, $default = null)
 {
+    return Session::fetchFlash($field);
     return Session::fetchFlash($field) ?? $default;
 }

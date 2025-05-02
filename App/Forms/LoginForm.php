@@ -12,6 +12,7 @@
 
 namespace App\Forms;
 
+use App\Controllers\App;
 use Core\ValidationException;
 use App\System\Traits\AuthValidator;
 use App\Controllers\MessageController;
@@ -35,10 +36,10 @@ class LoginForm
     }
 
 
-    public function __construct(array $data)
+    public function __construct(MessageController $messageController , array $data)
     {
         $this->data = $data;
-        $this->messageController = new MessageController();
+        $this->messageController = $messageController;
 
         $this->validateNotVacant($this->data);
         $this->string('email', $this->data['email']);
@@ -47,13 +48,13 @@ class LoginForm
     }
 
 
-
     /**
      * @throws ValidationException
+     * @throws \Exception
      */
     public static function validate(array $data): static
     {
-        $login = new static($data);
+        $login = new static(App::resolve(MessageController::class), $data);
 
         if ($login->failed()) {
             $login->throwException();

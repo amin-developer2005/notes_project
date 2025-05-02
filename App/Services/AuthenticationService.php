@@ -10,17 +10,18 @@
  */
 
 
-namespace Core;
+namespace App\Services;
 
 use Core\Url;
 use Core\Redirect;
+use http\Client\Curl\User;
 use Symfony\Component\HttpFoundation\Request;
 use App\View\View;
 use App\Models\UserModel;
 use App\Forms\LoginForm;
 
 
-class Authenticator
+class AuthenticationService
 {
     public function attempt($email, $password): bool
     {
@@ -46,6 +47,23 @@ class Authenticator
         session_regenerate_id(true);
     }
 
+
+    public function register(array $info)
+    {
+        $user = UserModel::fetchUserByEmail($info['email']);
+
+        if (! $user) {
+            $hashedPassword = generateHashArgon($info['password']);
+            UserModel::create($info['username'], $info['email'], $hashedPassword);
+
+            return true;
+        }
+
+        return false;
+    }
+    
+    
+    
 
     public function logout(): void
     {
