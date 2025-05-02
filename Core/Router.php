@@ -56,7 +56,7 @@ class Router
                     Middleware::resolver($middleware);
                 }
 
-                [$controller, $method] = $route['controller'];
+                [$controller, $method] = $route['action'];
                 $controllerInstance = $this->container->autoResolve($controller);
 
                 call_user_func_array([$controllerInstance, $method], []);
@@ -71,12 +71,12 @@ class Router
 
 
 
-    public function add(string $method, string $uri, array $controller): static
+    public function add(string $method, string $uri, array $action): static
     {
         $this->routes[] = [
-            'method' => strtoupper($method),
-            'uri' => $uri,
-            'controller' => $controller,
+            'method'     => strtoupper($method),
+            'uri'        => $uri,
+            'action'    => $action,
             'middleware' => null,
         ];
 
@@ -128,23 +128,6 @@ class Router
 
 
 
-
-    public function middleware($name)
-    {
-        if (null !== $middleware = $this->routes['middleware']) {
-            if ($middleware === $name) {
-
-                match ($name) {
-                    'auth' => new Auth()->handle(),
-                    'guest' => new Guest()->handle(),
-                };
-
-            }
-        }
-    }
-
-
-
     #[NoReturn] private function abort($code = Response::NOTFOUND): void
     {
         http_response_code($code);
@@ -160,37 +143,5 @@ class Router
 
 
 
-
-
-    public function createRoute($methods, $uri, $action)
-    {
-            if ($this->actionReferencesController($action)) {
-                $this->converActionToController($action);
-            }
-    }
-
-
-    private function actionReferencesController($action): bool
-    {
-        if (! $action instanceof \Closure) {
-            return is_array($action);
-        }
-
-        return false;
-    }
-
-
-    private function converActionToController($action): array
-    {
-        $data = [];
-
-        if (is_array($action)) {
-            $data = ['controller' => $action[0], 'method' => $action[1]];
-        } else {
-            $data['controller'] = $action;
-        }
-
-        return $data;
-    }
 
 }

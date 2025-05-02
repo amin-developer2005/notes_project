@@ -38,7 +38,9 @@ class SessionController
 
     public function create(): void
     {
-        View::render('session/create', ['heading' => 'Log In to your account', 'errors' => []]);
+        View::render('session/create', [
+            'heading' => 'Log In to your account',
+            'errors' => Session::fetchFlash('errors') ?? [],]);
     }
 
 

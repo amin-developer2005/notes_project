@@ -55,7 +55,10 @@ class RegisterController
 
     public function create(): void
     {
-        View::render('registration/create', ['heading' => 'Sign Up to your account', 'errors' => Session::fetchFlash('errors')]);
+        View::render('registration/create', [
+            'heading' => 'Sign Up to your account',
+            'errors' => Session::fetchFlash('errors')
+        ]);
     }
 
 
